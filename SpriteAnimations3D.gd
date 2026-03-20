@@ -69,3 +69,33 @@ static func walk_wobble(delta: float, sprite: Sprite3D, camera: Camera3D, is_mov
 		# 4. Reset to Neutral when stopped
 		sprite.rotation.z = lerp(sprite.rotation.z, 0.0, delta * 5.0)
 		sprite.position.y = lerp(sprite.position.y, 0.0, delta * 5.0)
+		
+static func talk_chatter(delta: float, sprite: Sprite3D, camera: Camera3D, base_scale: Vector3, is_talking: bool = true):
+	# Unique offset so multiple talkers don't sync up
+	var time = (Time.get_ticks_msec() * 0.001) + (sprite.get_instance_id() * 0.5)
+	
+	if is_talking and camera:
+		# 1. Faster, more "attentive" billboard alignment
+		sprite.rotation.y = lerp_angle(sprite.rotation.y, camera.rotation.y, delta * 15.0)
+
+		# 2. Emphatic Sway (Faster and slightly wider than idle)
+		# We mix two fast sine waves to make the "bobbing" look less predictable
+		var talk_sway = (sin(time * 8.0) * 0.5 + sin(time * 3.2)) * deg_to_rad(4.0)
+		sprite.rotation.z = lerp(sprite.rotation.z, talk_sway, delta * 8.0)
+		
+		# 3. Vertical "Chatter" (Simulating jaw/body movement)
+		# We use a very fast sine wave for the Y-position
+		var chatter_bob = abs(sin(time * 12.0)) * 0.08
+		sprite.position.y = lerp(sprite.position.y, chatter_bob, delta * 10.0)
+
+		# 4. Rapid Squash & Stretch (The "Talking" mouth feel)
+		# Talking usually involves rapid vertical stretching
+		var talk_pulse = 1.0 + (sin(time * 15.0) * 0.04)
+		sprite.scale.x = lerp(sprite.scale.x, base_scale.x * (1.0 / talk_pulse), delta * 15.0)
+		sprite.scale.y = lerp(sprite.scale.y, base_scale.y * talk_pulse, delta * 15.0)
+		
+	else:
+		# Smoothly return to the base state when they stop talking
+		sprite.rotation.z = lerp(sprite.rotation.z, 0.0, delta * 5.0)
+		sprite.position.y = lerp(sprite.position.y, 0.0, delta * 5.0)
+		sprite.scale = sprite.scale.lerp(base_scale, delta * 5.0)
