@@ -99,3 +99,4 @@ static func talk_chatter(delta: float, sprite: Sprite3D, camera: Camera3D, base_
 		sprite.rotation.z = lerp(sprite.rotation.z, 0.0, delta * 5.0)
 		sprite.position.y = lerp(sprite.position.y, 0.0, delta * 5.0)
 		sprite.scale = sprite.scale.lerp(base_scale, delta * 5.0)
+
