@@ -3,7 +3,7 @@ class_name SpriteAnimations3D
 
 ## This is a collection of function used for animating sprites
 
-static func speechwobble(delta: float, sprite : Sprite3D, is_moving: bool, target_scale : float, squash : float):
+static func speechwobble(delta: float, sprite : Sprite3D, is_moving: bool, target_scale : float, squash : float): ## Squash-and-stretch bob: rhythmic stepping when moving, smooth return when idle
 	var time = Time.get_ticks_msec() * 0.001
 	
 	if is_moving:
@@ -17,7 +17,7 @@ static func speechwobble(delta: float, sprite : Sprite3D, is_moving: bool, targe
 		# Smoothly brings the sprite back to its original shape when stopped
 		sprite.scale = sprite.scale.lerp(Vector3(target_scale, target_scale, target_scale), delta * 10.0)
 
-static func idle_sway(delta: float, sprite: Sprite3D, camera: Camera3D, base_scale: Vector3, is_idle: bool = true):
+static func idle_sway(delta: float, sprite: Sprite3D, camera: Camera3D, base_scale: Vector3, is_idle: bool = true): ## Billboard sway with layered jitter, breathing bob, and subtle squash-stretch for idle NPCs
 	# Using a unique offset (like the sprite's ID) so multiple NPCs don't move in sync
 	var time = (Time.get_ticks_msec() * 0.001) + (sprite.get_instance_id() * 0.1)
 	
@@ -47,7 +47,7 @@ static func idle_sway(delta: float, sprite: Sprite3D, camera: Camera3D, base_sca
 		sprite.rotation.z = lerp(sprite.rotation.z, 0.0, delta * 5.0)
 		sprite.position.y = lerp(sprite.position.y, 0.0, delta * 5.0)
 		sprite.scale = sprite.scale.lerp(base_scale, delta * 5.0)
-static func walk_wobble(delta: float, sprite: Sprite3D, camera: Camera3D, is_moving: bool, max_rotation_deg: float = 8.0, speed: float = 12.0, bob_height: float = 0.15):
+static func walk_wobble(delta: float, sprite: Sprite3D, camera: Camera3D, is_moving: bool, max_rotation_deg: float = 8.0, speed: float = 12.0, bob_height: float = 0.15): ## Side-to-side tilt and vertical bob while moving; resets to neutral when stopped
 	var time = Time.get_ticks_msec() * 0.001
 	
 	# 1. Face the camera (Billboard alignment)
@@ -70,7 +70,7 @@ static func walk_wobble(delta: float, sprite: Sprite3D, camera: Camera3D, is_mov
 		sprite.rotation.z = lerp(sprite.rotation.z, 0.0, delta * 5.0)
 		sprite.position.y = lerp(sprite.position.y, 0.0, delta * 5.0)
 		
-static func talk_chatter(delta: float, sprite: Sprite3D, camera: Camera3D, base_scale: Vector3, is_talking: bool = true):
+static func talk_chatter(delta: float, sprite: Sprite3D, camera: Camera3D, base_scale: Vector3, is_talking: bool = true): ## Rapid squash-stretch chatter with emphatic sway and jaw-bob for talking NPCs
 	# Unique offset so multiple talkers don't sync up
 	var time = (Time.get_ticks_msec() * 0.001) + (sprite.get_instance_id() * 0.5)
 	
